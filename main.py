@@ -14,15 +14,22 @@ bot = Bot(token=API_TOKEN, loop=loop)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
+
 async def showresults(message):
-    address = getpaper(message)
-    print(address)
+    address = getpaper(message, 1)
+
     if address:
         markup = types.InlineKeyboardMarkup(row_width=1, inline_keyboard=None)
         markup.add(types.InlineKeyboardButton("Click Here to download!", url=address[0]))
         await message.reply("Your paper is ready", reply_markup=markup)
     else:
-        await message.reply("Please send a vilid link of paper's page \n or valid DOI")
+        address = getpaper(message,2)
+        if address:
+            markup = types.InlineKeyboardMarkup(row_width=1, inline_keyboard=None)
+            markup.add(types.InlineKeyboardButton("Click Here to download!", url=address[0]))
+            await message.reply("Your paper is ready", reply_markup=markup)
+        else:
+            await message.reply("Please send a vilid link of paper's page \n or valid DOI")
 
 
 
@@ -46,9 +53,12 @@ async def echo(message: types.Message):
             await message.reply("Please send a valid link of paper's page \n or valid DOI")
 
 
-def getpaper(paper):
-    html_page = urlopen("http://sci-hub.tw/" + paper.text)
-    print(html_page)
+def getpaper(paper,i):
+    if i == 1:
+        html_page = urlopen("http://sci-hub.tw/" + paper.text)
+    else:
+        html_page=urlopen("http://sci-hub.is/"+paper.text)
+
     soup = BeautifulSoup(html_page)
 
     for anchor in soup.findAll('div', {'id': 'article'}):

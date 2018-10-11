@@ -1,5 +1,5 @@
 import asyncio
-from aiogram import Bot, types, dispatcher
+from aiogram import Bot, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
@@ -29,7 +29,7 @@ async def showresults(message):
 
 @dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
-    await message.reply("Hi! I am your assisstence in getting all papers you want!\n Just send me your link or DOI!")
+    await message.reply("Hi! I am your assistance to get all papers you want!\nsend me link of paper's page or DOI!")
 
 
 @dp.message_handler()
@@ -43,7 +43,7 @@ async def echo(message: types.Message):
             message.text= "http://"+message.text
             await showresults(message)
         else:
-            await message.reply("Please send a vilid link of paper's page \n or valid DOI")
+            await message.reply("Please send a valid link of paper's page \n or valid DOI")
 
 
 def getpaper(paper):
